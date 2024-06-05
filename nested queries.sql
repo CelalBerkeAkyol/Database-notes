@@ -50,3 +50,8 @@ from ogrenciler o , notlar n
 where o.ogrno=n.ogrno and o.cinsiyet = "Bayan" and n.vize =
 	(SELECT max(vize) from notlar n, ogrenciler o );
 -- 40 nolu derste vizesi 50'den düşük olan öğrencilerin ad, bölüm ve fakülte adlarının listesi
+SELECT o.ograd, o.ogrsoyad, b.bolumad, f.fakultead 
+from ogrenciler o , bolumler b, fakulteler f 
+where o.ogrno in
+(SELECT n.ogrno from notlar n, ogrenciler o 
+where n.vize < 50 and n.ogrno = o.ogrno) and o.bolumkod = b.bolumno and b.fakulteno = f.fakulteno;
