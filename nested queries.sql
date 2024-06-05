@@ -55,3 +55,26 @@ from ogrenciler o , bolumler b, fakulteler f
 where o.ogrno in
 (SELECT n.ogrno from notlar n, ogrenciler o 
 where n.vize < 50 and n.ogrno = o.ogrno) and o.bolumkod = b.bolumno and b.fakulteno = f.fakulteno;
+-- Her bölüm adına göre vize ortalaması kaçtır?
+SELECT b.bolumad, AVG(n.vize) as vize_ortalamasi
+FROM bolumler b, ogrenciler o, notlar n
+WHERE b.bolumno = o.bolumkod
+AND o.ogrno = n.ogrno
+GROUP BY b.bolumad;
+-- Ortalama vizesi 60 dan yüksek olan bölüm adları nelerdir?
+SELECT b.bolumad
+FROM bolumler b, ogrenciler o, notlar n
+WHERE b.bolumno = o.bolumkod AND o.ogrno = n.ogrno
+GROUP BY b.bolumad
+HAVING AVG(n.vize) > 60;
+-- Ortalama vizesi 60 den büyük olan bölümlerdeki toplam öğrenci sayısı kaçtır?
+SELECT SUM(ogrenci_sayisi) as toplam_ogrenci_sayisi
+FROM (
+    SELECT b.bolumad, COUNT(DISTINCT o.ogrno) as ogrenci_sayisi
+    FROM bolumler b, ogrenciler o, notlar n
+    WHERE b.bolumno = o.bolumkod
+    AND o.ogrno = n.ogrno
+    GROUP BY b.bolumad
+    HAVING AVG(n.vize) > 60
+) as bolumler_ogrenci_sayisi;
+
