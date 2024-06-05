@@ -40,3 +40,9 @@ FROM notlar n
 INNER JOIN dersler d
 ON n.derskodu = d.derskodu
 group by d.dersadi;
+-- 30 nolu derste ortalama vize ve finalden daha yüksek not alan erkek öğrencilerin ad, soyad
+ve bölüm adlarının listesi
+SELECT o.ograd,o.ogrsoyad,b.bolumad from ogrenciler o
+INNER JOIN notlar n ON o.ogrno = n.ogrno 
+INNER join bolumler b ON o.bolumkod = b.bolumno 
+where n.derskodu = 30 and vize > (SELECT avg(vize) from notlar) and final > (Select avg(final) from notlar ) and o.cinsiyet = "erkek";
